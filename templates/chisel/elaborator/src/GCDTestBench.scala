@@ -53,9 +53,10 @@ object GCDTestBench extends Elaborator {
   @main
   def design(
     @arg(name = "parameter") parameter:    os.Path,
-    @arg(name = "run-firtool") runFirtool: mainargs.Flag
+    @arg(name = "run-firtool") runFirtool: mainargs.Flag,
+    @arg(name = "target-dir") targetDir:   os.Path
   ) =
-    designImpl[GCDTestBench, GCDTestBenchParameter](parameter, runFirtool.value)
+    designImpl[GCDTestBench, GCDTestBenchParameter](parameter, runFirtool.value, targetDir)
 
   def main(args: Array[String]): Unit = ParserForMethods(this).runOrExit(args)
 }

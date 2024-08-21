@@ -27,7 +27,8 @@ trait Elaborator {
 
   def designImpl[M <: SerializableModule[P]: universe.TypeTag, P <: SerializableModuleParameter: universe.TypeTag](
     parameter:  os.Path,
-    runFirtool: Boolean
+    runFirtool: Boolean,
+    targetDir:  os.Path = os.pwd
   )(
     implicit
     rwP: upickle.default.Reader[P]
@@ -56,9 +57,9 @@ trait Elaborator {
         case _: chisel3.stage.ChiselCircuitAnnotation => None
         case a => Some(a)
       }
-    val annoJsonFile = os.pwd / s"${fir.main}.anno.json"
-    val firFile = os.pwd / s"${fir.main}.fir"
-    val svFile = os.pwd / s"${fir.main}.sv"
+    val annoJsonFile = targetDir / s"${fir.main}.anno.json"
+    val firFile = targetDir / s"${fir.main}.fir"
+    val svFile = targetDir / s"${fir.main}.sv"
     os.write.over(firFile, fir.serialize)
     os.write.over(
       annoJsonFile,
