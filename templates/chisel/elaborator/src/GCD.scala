@@ -9,9 +9,8 @@ import org.chipsalliance.t1.elaborator.Elaborator
 object GCD extends Elaborator {
   @main
   case class GCDParameterMain(
-      @arg(name = "xLen") xLen: Int,
-      @arg(name = "useAsyncReset") useAsyncReset: Boolean
-  ) {
+    @arg(name = "xLen") xLen:                   Int,
+    @arg(name = "useAsyncReset") useAsyncReset: Boolean) {
     def convert: GCDParameter = GCDParameter(xLen, useAsyncReset)
   }
 
@@ -25,8 +24,8 @@ object GCD extends Elaborator {
 
   @main
   def design(
-      @arg(name = "parameter") parameter: os.Path,
-      @arg(name = "run-firtool") runFirtool: mainargs.Flag
+    @arg(name = "parameter") parameter:    os.Path,
+    @arg(name = "run-firtool") runFirtool: mainargs.Flag
   ) =
     designImpl[GCD, GCDParameter](parameter, runFirtool.value)
 
