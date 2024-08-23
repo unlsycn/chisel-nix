@@ -1,5 +1,7 @@
 .bloop
 .metals/
+.vscode/
 out/
-/result*
+result*
 /dependencies/
+target/
