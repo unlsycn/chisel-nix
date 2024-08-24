@@ -17,14 +17,12 @@ pub type SvBitVecVal = u32;
 static DPI_TARGET: Mutex<Option<Box<Driver>>> = Mutex::new(None);
 
 #[repr(C)]
-#[derive(Debug)]
 pub(crate) struct TestPayloadBits {
     pub(crate) x: Vec<u8>,
     pub(crate) y: Vec<u8>,
     pub(crate) result: Vec<u8>,
 }
 #[repr(C)]
-#[derive(Debug)]
 pub(crate) struct TestPayload {
     pub(crate) valid: svLogic,
     pub(crate) bits: TestPayloadBits,
@@ -59,6 +57,7 @@ unsafe fn fill_test_payload(dst: *mut SvBitVecVal, data_width: u64, payload: &Te
 #[no_mangle]
 unsafe extern "C" fn gcd_init() {
     let args = GcdArgs::parse();
+    args.setup_logger().unwrap();
     let scope = SvScope::get_current().expect("failed to get scope in gcd_init");
     let driver = Box::new(Driver::new(scope, &args));
 
@@ -80,7 +79,6 @@ unsafe extern "C" fn gcd_watchdog(reason: *mut c_char) {
     }
 }
 
-static mut cnt: u64 = 0;
 #[no_mangle]
 unsafe extern "C" fn gcd_input(payload: *mut svBitVecVal) {
     let mut driver = DPI_TARGET.lock().unwrap();

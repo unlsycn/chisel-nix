@@ -1,6 +1,6 @@
 use num_bigint::{BigUint, RandBigInt};
 use num_traits::Zero;
-use tracing::{debug, error, info, trace};
+use tracing::{error, info, trace};
 
 use crate::{
     dpi::{TestPayload, TestPayloadBits},
@@ -48,7 +48,7 @@ impl Driver {
         }
     }
 
-    pub(crate) fn get_input(&self) -> TestPayload {
+    pub(crate) fn get_input(&mut self) -> TestPayload {
         fn gcd(x: BigUint, y: BigUint) -> BigUint {
             if y.is_zero() {
                 x.clone()
@@ -67,6 +67,8 @@ impl Driver {
         let x = rng.gen_biguint(self.data_width);
         let y = rng.gen_biguint(self.data_width);
 
+        self.last_input_cycle = get_time();
+        self.test_num += 1;
         TestPayload {
             valid: 1,
             bits: TestPayloadBits {
@@ -93,7 +95,7 @@ impl Driver {
             #[cfg(feature = "trace")]
             if self.dump_end != 0 && tick > self.dump_end {
                 info!("[{tick}] run to dump end, exiting");
-                return WATCHDOG_TIMEOUT;
+                return WATCHDOG_FINISH;
             }
 
             #[cfg(feature = "trace")]
