@@ -1,4 +1,5 @@
 use std::ffi::{c_char, CString};
+use std::process::exit;
 use std::sync::Mutex;
 
 use crate::drive::Driver;
@@ -70,10 +71,10 @@ unsafe extern "C" fn gcd_watchdog(reason: *mut c_char) {
     let mut driver = DPI_TARGET.lock().unwrap();
     if let Some(driver) = driver.as_mut() {
         // FIXME
-        // let code = driver.watchdog();
-        // if code != 0 {
-        //     exit(code as i32);
-        // }
+        let code = driver.watchdog();
+        if code != 0 {
+            exit(code as i32);
+        }
         *reason = driver.watchdog() as c_char
     }
 }

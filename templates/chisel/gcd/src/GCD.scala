@@ -60,7 +60,8 @@ class GCD(val parameter: GCDParameter)
   override protected def implicitReset: Reset = io.reset
 
   val x: UInt = Reg(chiselTypeOf(io.input.bits.x))
-  val y: UInt = Reg(chiselTypeOf(io.input.bits.x))
+  // Block X-state propagation
+  val y: UInt = RegInit(chiselTypeOf(io.input.bits.x), 0.U)
   val busy = y =/= 0.U
 
   when(x > y) { x := x - y }.otherwise { y := y - x }
@@ -157,6 +158,9 @@ class GCDTestBench(val parameter: GCDTestBenchParameter)
     RawUnclockedNonVoidFunctionCall("gcd_input", Valid(new TestPayload))(
       dut.io.input.ready
     )
+  when (dut.io.input.ready){
+    printf("ready\n")
+  }
   dut.io.input.valid := request.valid
   dut.io.input.bits := request.bits
 

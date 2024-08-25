@@ -65,15 +65,23 @@ impl Driver {
         let mut rng = rand::thread_rng();
         let x = rng.gen_biguint(self.data_width);
         let y = rng.gen_biguint(self.data_width);
+        let result = gcd(x.clone(), y.clone());
 
         self.last_input_cycle = get_time();
         self.test_num += 1;
+        trace!(
+            "[{}] input is x={} y={} result={}",
+            get_time(),
+            &x,
+            &y,
+            &result
+        );
         TestPayload {
             valid: 1,
             bits: TestPayloadBits {
                 x: biguint_to_vec(&x),
                 y: biguint_to_vec(&y),
-                result: biguint_to_vec(&gcd(x, y)),
+                result: biguint_to_vec(&result),
             },
         }
     }
@@ -102,7 +110,7 @@ impl Driver {
                 self.start_dump_wave();
                 self.dump_started = true;
             }
-            trace!("[{}] watchdog continue", tick);
+            trace!("[{tick}] watchdog continue");
             WATCHDOG_CONTINUE
         }
     }
