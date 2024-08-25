@@ -3,7 +3,7 @@
 rustPlatform.buildRustPackage rec {
   name = "dpi-lib";
   src = ./../../gcdemu;
-  cargoHash = "sha256-ax7KNB40Cjwb3DwuvQNC+SVF1wqhnDHDO5wQ6/LkPLo=";
+  cargoHash = "sha256-soOva+RFpbA74zyoOIms0G6HLt7dpYcpatsBQSI3hsM=";
   buildFeatures = [ "sv2023" ] ++ lib.optionals enable-trace [ "trace" ];
 
   env = {

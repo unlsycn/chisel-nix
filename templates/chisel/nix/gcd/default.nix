@@ -11,6 +11,7 @@ lib.makeScope newScope (scope: {
   mlirbc = scope.callPackage ./mlirbc.nix { };
   rtl = scope.callPackage ./rtl.nix { };
 
+  # Testbench
   tb-compiled = scope.callPackage ./gcd.nix { target = scope.tb-target; };
   tb-elaborate = scope.callPackage ./elaborate.nix {
     elaborator = scope.tb-compiled.elaborator;

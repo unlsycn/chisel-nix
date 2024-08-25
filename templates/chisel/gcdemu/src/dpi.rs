@@ -1,10 +1,9 @@
 use std::ffi::{c_char, CString};
-use std::process::exit;
 use std::sync::Mutex;
 
 use crate::drive::Driver;
-use crate::svdpi::sys::{svBitVecVal, svLogic};
-use crate::svdpi::SvScope;
+use svdpi::sys::dpi::{svBitVecVal, svLogic};
+use svdpi::SvScope;
 use crate::GcdArgs;
 use clap::Parser;
 
@@ -71,10 +70,10 @@ unsafe extern "C" fn gcd_watchdog(reason: *mut c_char) {
     let mut driver = DPI_TARGET.lock().unwrap();
     if let Some(driver) = driver.as_mut() {
         // FIXME
-        let code = driver.watchdog();
-        if code != 0 {
-            exit(code as i32);
-        }
+        // let code = driver.watchdog();
+        // if code != 0 {
+        //     exit(code as i32);
+        // }
         *reason = driver.watchdog() as c_char
     }
 }
@@ -101,11 +100,12 @@ mod dpi_export {
 }
 
 #[cfg(feature = "trace")]
-pub(crate) fn dump_wave(scope: crate::svdpi::SvScope, path: &str) {
-    use crate::svdpi;
+pub(crate) fn dump_wave(scope: SvScope, path: &str) {
+    use svdpi::set_scope;
+
     let path_cstring = CString::new(path).unwrap();
 
-    svdpi::set_scope(scope);
+    set_scope(scope);
     unsafe {
         dpi_export::dump_wave(path_cstring.as_ptr());
     }

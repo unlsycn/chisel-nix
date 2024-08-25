@@ -4,10 +4,9 @@ use tracing::{error, info, trace};
 
 use crate::{
     dpi::{TestPayload, TestPayloadBits},
-    get_time,
-    svdpi::SvScope,
     GcdArgs,
 };
+use svdpi::{get_time, SvScope};
 
 pub(crate) struct Driver {
     scope: SvScope,

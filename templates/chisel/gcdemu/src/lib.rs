@@ -4,7 +4,6 @@ use tracing_subscriber::{EnvFilter, FmtSubscriber};
 
 pub mod dpi;
 pub mod drive;
-pub mod svdpi;
 
 #[derive(Parser)]
 pub(crate) struct GcdArgs {
@@ -48,9 +47,4 @@ impl GcdArgs {
             .expect("internal error: fail to setup log subscriber");
         Ok(())
     }
-}
-
-#[cfg(feature = "sv2023")]
-pub fn get_time() -> u64 {
-    svdpi::get_time()
 }
