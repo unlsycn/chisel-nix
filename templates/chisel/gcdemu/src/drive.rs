@@ -56,12 +56,6 @@ impl Driver {
             }
         }
 
-        fn biguint_to_vec(x: &BigUint) -> Vec<u8> {
-            let mut x_bytes = x.to_bytes_le();
-            x_bytes.resize(8, 0);
-            x_bytes
-        }
-
         let mut rng = rand::thread_rng();
         let x = rng.gen_biguint(self.data_width);
         let y = rng.gen_biguint(self.data_width);
@@ -78,11 +72,7 @@ impl Driver {
         );
         TestPayload {
             valid: 1,
-            bits: TestPayloadBits {
-                x: biguint_to_vec(&x),
-                y: biguint_to_vec(&y),
-                result: biguint_to_vec(&result),
-            },
+            bits: TestPayloadBits { x, y, result },
         }
     }
 
@@ -96,7 +86,7 @@ impl Driver {
             info!("[{tick}] test finished, exiting");
             WATCHDOG_FINISH
         } else if tick - self.last_input_cycle > self.timeout {
-            error!("[{tick}] watchdog timeout ");
+            error!("[{tick}] watchdog timeout");
             WATCHDOG_TIMEOUT
         } else {
             #[cfg(feature = "trace")]

@@ -144,9 +144,7 @@ class GCDTestBench(val parameter: GCDTestBenchParameter)
   // For each timeout cycles, check it
   val (_, callWatchdog) = Counter(true.B, parameter.timeout)
   val watchdogCode = RawUnclockedNonVoidFunctionCall("gcd_watchdog", UInt(8.W))(callWatchdog)
-  dontTouch(watchdogCode)
   when(watchdogCode =/= 0.U) {
-    // FIXME: calling stop here causes the logic to be optimised
     stop(cf"""{"event":"SimulationStop","reason": ${watchdogCode},"cycle":${simulationTime}}\n""")
   }
   class TestPayload extends Bundle {
@@ -158,9 +156,6 @@ class GCDTestBench(val parameter: GCDTestBenchParameter)
     RawUnclockedNonVoidFunctionCall("gcd_input", Valid(new TestPayload))(
       dut.io.input.ready
     )
-  when (dut.io.input.ready){
-    printf("ready\n")
-  }
   dut.io.input.valid := request.valid
   dut.io.input.bits := request.bits
 
@@ -182,6 +177,7 @@ class GCDTestBench(val parameter: GCDTestBenchParameter)
     ),
     label = Some("GCD_ASSERT_MULTIPLE_REQ")
   )
+  dontTouch(dut.io.output.bits)
   // FIXME
   // AssertProperty(
   //   BoolSequence(
