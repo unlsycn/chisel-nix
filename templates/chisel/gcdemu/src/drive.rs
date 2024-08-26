@@ -47,6 +47,13 @@ impl Driver {
         }
     }
 
+    pub(crate) fn init(&mut self) {
+        if self.dump_start == 0 {
+            self.start_dump_wave();
+            self.dump_started = true;
+        }
+    }
+
     pub(crate) fn get_input(&mut self) -> TestPayload {
         fn gcd(x: BigUint, y: BigUint) -> BigUint {
             if y.is_zero() {

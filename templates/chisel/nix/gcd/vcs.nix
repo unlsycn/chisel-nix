@@ -28,7 +28,6 @@ stdenv.mkDerivation {
           -debug_access+pp+dmptf+thread \
           -kdb=common_elab,hgldd_all''
       } \
-      -file firrtl_black_box_resource_files.f \
       -file filelist.f \
       ${dpi-lib}/lib/libgcdemu.a \
       -o gcd-vcs-simulator
@@ -39,6 +38,7 @@ stdenv.mkDerivation {
   passthru = {
     inherit (dpi-lib) enable-trace;
     inherit vcs-fhs-env;
+    inherit dpi-lib;
   };
 
   shellHook = ''

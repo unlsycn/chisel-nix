@@ -10,7 +10,7 @@ import chisel3.ltl.Property.{eventually, not}
 import chisel3.ltl.{AssertProperty, CoverProperty, Delay, Sequence}
 import chisel3.probe.{define, Probe, ProbeValue}
 import chisel3.properties.{AnyClassType, Class, Property}
-import chisel3.util.circt.dpi.RawUnclockedNonVoidFunctionCall
+import chisel3.util.circt.dpi.{RawClockedNonVoidFunctionCall, RawUnclockedNonVoidFunctionCall}
 import chisel3.util.{DecoupledIO, HasExtModuleInline, Valid}
 import chisel3.util.Counter
 
@@ -153,9 +153,7 @@ class GCDTestBench(val parameter: GCDTestBenchParameter)
     val result = UInt(parameter.gcdParameter.width.W)
   }
   val request =
-    RawUnclockedNonVoidFunctionCall("gcd_input", Valid(new TestPayload))(
-      dut.io.input.ready
-    )
+    RawClockedNonVoidFunctionCall("gcd_input", Valid(new TestPayload))(dut.io.clock, dut.io.input.ready)
   dut.io.input.valid := request.valid
   dut.io.input.bits := request.bits
 

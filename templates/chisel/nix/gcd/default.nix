@@ -26,7 +26,11 @@ lib.makeScope newScope (scope: {
     dpi-lib = scope.tb-dpi-lib;
   };
   verilated-trace = scope.verilated.override {
-    dpi-lib = scope.tb-dpi-lib.override { enable-trace = true; };
+    dpi-lib = scope.verilated.dpi-lib.override { enable-trace = true; };
+  };
+  rtl-vcs = scope.tb-rtl.override {
+    enable-layers =
+      [ "Verification" "Verification.Assert" "Verification.Cover" ];
   };
   vcs = scope.callPackage ./vcs.nix {
     dpi-lib = scope.tb-dpi-lib.override {
@@ -37,6 +41,9 @@ lib.makeScope newScope (scope: {
       enable-layers =
         [ "Verification" "Verification.Assert" "Verification.Cover" ];
     };
+  };
+  vcs-trace = scope.vcs.override {
+    dpi-lib = scope.vcs.dpi-lib.override { enable-trace = true; };
   };
 
   # TODO: designConfig should be read from OM
